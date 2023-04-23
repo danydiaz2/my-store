@@ -7,4 +7,12 @@ import { Component } from '@angular/core';
 })
 export class NavComponent {
 
+  activeMenu = false;
+
+  constructor() {}
+
+  toggleMenu() {
+    this.activeMenu = !this.activeMenu;
+  }
+
 }
