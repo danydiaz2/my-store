@@ -8,6 +8,8 @@ import { Product } from 'src/app/models/product.model';
 })
 export class ProductsComponent {
 
+  myShoppingCart: Product[] = [];
+  total = 0;
   products : Product[] = [
     {
       id: '1',
@@ -46,5 +48,11 @@ export class ProductsComponent {
       image: 'https://static.platzi.com/media/user_upload/glasses-05350737-5831-4c98-be55-824399206dba.jpg'
     },
   ]
+
+  onAddToShoppingCart(product: Product) {
+    console.log(product);
+    this.myShoppingCart.push(product);
+    this.total = this.myShoppingCart.reduce((sum, item) => sum + item.price, 0);
+  }
 
 }
