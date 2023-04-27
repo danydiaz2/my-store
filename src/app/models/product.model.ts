@@ -10,7 +10,8 @@ export interface Product {
     price: number,
     images: string[],
     description: string,
-    category: Category
+    category: Category,
+    taxes?: number // No viene del backend, se maneja desde el front
 }
 
 export interface CreateProductDTO extends Omit<Product, 'id' | 'category'> {
