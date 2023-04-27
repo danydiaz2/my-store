@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { switchMap, zip } from 'rxjs';
 import { CreateProductDTO, Product, UpdateProductDTO } from 'src/app/models/product.model';
 import { ProductsService } from 'src/app/services/products.service';
 import { StoreService } from 'src/app/services/store.service';
@@ -61,6 +62,24 @@ export class ProductsComponent implements OnInit {
     }, errorMsg => {
       window.alert(errorMsg);
       this.statusDetail = 'error';
+    })
+  }
+
+  readAndUpdate(id: string) {
+    this.productsService.getProduct(id)
+    .pipe(
+      switchMap((product) => this.productsService.update(product.id, {title: 'change'}))
+    )
+    .subscribe(data => {
+      console.log(data);
+    })
+    zip( // zip ayuda a hacer dos cosas al mismo tiempo sin depender de otra peticion o respuesta
+      this.productsService.getProduct(id),
+      this.productsService.update(id, {title: 'nuevo'})
+    )
+    .subscribe(response => {
+      const product = response[0];
+      const update = response[1];
     })
   }
 
