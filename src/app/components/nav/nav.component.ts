@@ -12,7 +12,6 @@ export class NavComponent implements OnInit {
 
   activeMenu = false;
   counter = 0;
-  token = '';
   profile: User | null = null;
 
   constructor(private storeService: StoreService, private authService: AuthService) {}
@@ -28,18 +27,20 @@ export class NavComponent implements OnInit {
   }
 
   login() {
-    this.authService.login('dany@gmail.com', '1212')
-    .subscribe( rta => {
-      this.token = rta.access_token;
-      this.getProfile();
-    })
-  }
-
-  getProfile() {
-    this.authService.profile(this.token)
-    .subscribe(user => {
+    this.authService.loginAndGet('dany@gmail.com', '1212')
+    .subscribe( user => {
+      //Mala practica callback hell, ya lo hace el método loginAndGet con switchmap
+      // this.token = rta.access_token;
+      // this.getProfile();
       this.profile = user;
     })
   }
+
+  // getProfile() {
+  //   this.authService.profile(this.token)
+  //   .subscribe(user => {
+  //     this.profile = user;
+  //   })
+  // }
 
 }
