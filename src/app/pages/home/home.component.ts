@@ -18,8 +18,8 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.productsService.getAllProducts(10,0)
     .subscribe(data => {
-     console.log(data);
-     this.products = data 
+     this.products = data;
+     this.offset += this.limit; 
     }) 
  }
 
