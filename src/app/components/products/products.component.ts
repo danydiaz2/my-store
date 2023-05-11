@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { switchMap, zip } from 'rxjs';
 import { CreateProductDTO, Product, UpdateProductDTO } from 'src/app/models/product.model';
 import { ProductsService } from 'src/app/services/products.service';
@@ -9,11 +9,12 @@ import { StoreService } from 'src/app/services/store.service';
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent {
 
   myShoppingCart: Product[] = [];
   total = 0;
-  products : Product[] = [];
+  @Input() products : Product[] = [];
+  @Output() loadMore = new EventEmitter();
   showProductDetail = false;
   productChosen: Product = {
     id:'',
@@ -27,21 +28,14 @@ export class ProductsComponent implements OnInit {
     }
 
   };
-  limit = 10;
-  offset = 0;
+  
   statusDetail: 'loading' | 'success' | 'error' | 'init' = 'init';
 
   constructor( private storeService: StoreService, private productsService: ProductsService){
     this.myShoppingCart = this.storeService.getShoppingCart();
   }
+  
 
-  ngOnInit(): void {
-     this.productsService.getProductsByPage(10,0)
-     .subscribe(data => {
-      console.log(data);
-      this.products = data 
-     }) 
-  }
 
   onAddToShoppingCart(product: Product) {
     this.storeService.addProduct(product);
@@ -120,13 +114,17 @@ export class ProductsComponent implements OnInit {
     })
   }
 
-  loadMore() {
-    this.productsService.getProductsByPage(this.limit,this.offset)
-    .subscribe(data => {
-     console.log(data);
-    this.products = this.products.concat(data);
-     this.offset += this.limit 
-    }) 
+  onLoadMore() {
+    this.loadMore.emit();
   }
+
+  // loadMore() {
+  //   this.productsService.getProductsByPage(this.limit,this.offset)
+  //   .subscribe(data => {
+  //    console.log(data);
+  //   this.products = this.products.concat(data);
+  //    this.offset += this.limit 
+  //   }) 
+  // }
 
 }
